@@ -20,6 +20,15 @@ export const uploadVideo = async (req, res) => {
                 .on("error", reject)
                 .run();
         });
+
+        //upload audio to cloudinary
+        const audioUpload = await uploadtoCloudinary(audioPath,'video');
+        fs.unlinkSync(videoPath);
+        fs.unlinkSync(audioPath);
+        res.json({
+            videoUrl: uploadRes.secure_url,
+            audioUrl: audioUpload.secure_url,
+        })
     } catch (error) {
         console.log(err);
         return res.status(500).json({ message: "Server Error" ,error: error.message});
